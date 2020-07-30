@@ -385,115 +385,6 @@ to load-town_th-m_th-sd_tiehouses_b-eth_b-ses_ticks [TOW TH-M TH-SD TIEHOUSE B-E
   import-world (word "worlds/" TOWN "_" TH-M "_" TH-SD "_" TIEHOUSE "_" B-ETH "_" B-SES "_t" TI ".csv")
   load-gisdataset
 end
-
-to baseline-samples
-  set town "Bradford"
-  set scale-down-pop 10
-  baseline-further-parameters
-  baseline-core-parameters
-  setup
-  foreach range 20 [x ->
-    shuffle-population
-    repeat 20 [ go ]
-    export-world (word "worlds/Bradford_baseline_Test" x "_t" ticks ".csv")
-    repeat 40 [ go ]
-    export-world (word "worlds/Bradford_baseline_Test" x "_t" ticks ".csv")
-    ]
-end
-to baseline-samples-continued
-  foreach [1 3 4 5 6 9 11 12 14 16 17 18 19] [x ->
-    import-world (word "worlds/Bradford_baseline_Test" x "_t60.csv")
-    load-gisdataset
-    repeat 80 [ go ]
-    export-world (word "worlds/Bradford_baseline_Test" x "_t" ticks ".csv")
-    repeat 160 [ go ]
-    export-world (word "worlds/Bradford_baseline_Test" x "_t" ticks ".csv")
-    ]
-end
-to baseline-samples-continued2
-  foreach [5 6 9 11 12 17 18] [x ->
-    import-world (word "worlds/Bradford_baseline_Test" x "_t300.csv")
-    load-gisdataset
-    repeat 320 [ go ]
-    export-world (word "worlds/Bradford_baseline_Test" x "_t" ticks ".csv")
-    ]
-end
-to baseline-samples-continued3
-  foreach [6 11 17 18] [x ->
-    import-world (word "worlds/Bradford_baseline_Test" x "_t620.csv")
-    load-gisdataset
-    repeat 640 [ go ]
-    export-world (word "worlds/Bradford_baseline_Test" x "_t" ticks ".csv")
-    ]
-end
-to baseline-samples-continued4
-  foreach [6 11 17 18] [x ->
-    import-world (word "worlds/Bradford_baseline_Test" x "_t1260.csv")
-    load-gisdataset
-    repeat 1260 [ go ]
-    export-world (word "worlds/Bradford_baseline_Test" x "_t" ticks ".csv")
-    ]
-end
-to figure-simulations
-  ; export-town_th-m_th-sd_tiehouses_b-eth_b-ses_ticks [TOW TH-M TH-SD TIEHOUSE B-ETH B-SES TI]
-  ;Fig 1
-  export-town_th-m_th-sd_tiehouses_b-eth_b-ses_ticks "Bradford" 0.3   0 false  4  0 1000
-  export-town_th-m_th-sd_tiehouses_b-eth_b-ses_ticks "Bradford" 0.3   0 false  8  0 1000
-  export-town_th-m_th-sd_tiehouses_b-eth_b-ses_ticks "Bradford" 0.3   0 false 12  0 1000
-  export-town_th-m_th-sd_tiehouses_b-eth_b-ses_ticks "Bradford" 0.3 0.1 false  4  0 1000
-  export-town_th-m_th-sd_tiehouses_b-eth_b-ses_ticks "Bradford" 0.3 0.1 false  8  0 1000
-  export-town_th-m_th-sd_tiehouses_b-eth_b-ses_ticks "Bradford" 0.3 0.1 false 12  0 1000
-  ; Fig 2
-  export-town_th-m_th-sd_tiehouses_b-eth_b-ses_ticks "Bradford" 0.3 0.1 false  8  8 1000
-  export-town_th-m_th-sd_tiehouses_b-eth_b-ses_ticks "Bradford" 0.3 0.1 false  8 12 1000
-  export-town_th-m_th-sd_tiehouses_b-eth_b-ses_ticks "Bradford" 0.3 0.1  true  8  0 1000
-  export-town_th-m_th-sd_tiehouses_b-eth_b-ses_ticks "Bradford" 0.3 0.1  true  8  8 1000
-  ; Further Figs.
-  export-town_th-m_th-sd_tiehouses_b-eth_b-ses_ticks "Bradford" 0.35   0 false  8  0 1000
-  export-town_th-m_th-sd_tiehouses_b-eth_b-ses_ticks "Bradford" 0.35   0 false 12  0 1000
-end
-
-to figure-simulations-cont
-;  load-town_th-m_th-sd_tiehouses_b-eth_b-ses_ticks "Bradford" 0.3   0 false  4  0 1000
-;  repeat 260 [ go ]
-;  export-world (word "worlds/" town "_" threshold-mean "_" threshold-sd "_" tie-houses-to-ses "_" beta-eth "_" beta-ses "_t" ticks ".csv")
-;
-;  load-town_th-m_th-sd_tiehouses_b-eth_b-ses_ticks "Bradford" 0.3   0 false  8  0 1000
-;  repeat 260 [ go ]
-;  export-world (word "worlds/" town "_" threshold-mean "_" threshold-sd "_" tie-houses-to-ses "_" beta-eth "_" beta-ses "_t" ticks ".csv")
-;
-;  load-town_th-m_th-sd_tiehouses_b-eth_b-ses_ticks "Bradford" 0.3   0 false 12  0 1000
-;  repeat 260 [ go ]
-;  export-world (word "worlds/" town "_" threshold-mean "_" threshold-sd "_" tie-houses-to-ses "_" beta-eth "_" beta-ses "_t" ticks ".csv")
-;
-;  load-town_th-m_th-sd_tiehouses_b-eth_b-ses_ticks "Bradford" 0.3 0.1 false  4  0 1000
-;  repeat 260 [ go ]
-;  export-world (word "worlds/" town "_" threshold-mean "_" threshold-sd "_" tie-houses-to-ses "_" beta-eth "_" beta-ses "_t" ticks ".csv")
-;
-;  load-town_th-m_th-sd_tiehouses_b-eth_b-ses_ticks "Bradford" 0.3 0.1 false  8  0 1000
-;  repeat 260 [ go ]
-;  export-world (word "worlds/" town "_" threshold-mean "_" threshold-sd "_" tie-houses-to-ses "_" beta-eth "_" beta-ses "_t" ticks ".csv")
-;
-;  load-town_th-m_th-sd_tiehouses_b-eth_b-ses_ticks "Bradford" 0.3 0.1 false 12  0 1000
-;  repeat 260 [ go ]
-;  export-world (word "worlds/" town "_" threshold-mean "_" threshold-sd "_" tie-houses-to-ses "_" beta-eth "_" beta-ses "_t" ticks ".csv")
-;
-  load-town_th-m_th-sd_tiehouses_b-eth_b-ses_ticks "Bradford" 0.3 0.1 false  8  8 300
-  repeat 960 [ go ]
-  export-world (word "worlds/" town "_" threshold-mean "_" threshold-sd "_" tie-houses-to-ses "_" beta-eth "_" beta-ses "_t" ticks ".csv")
-
-  load-town_th-m_th-sd_tiehouses_b-eth_b-ses_ticks "Bradford" 0.3 0.1 false  8 12 300
-  repeat 960 [ go ]
-  export-world (word "worlds/" town "_" threshold-mean "_" threshold-sd "_" tie-houses-to-ses "_" beta-eth "_" beta-ses "_t" ticks ".csv")
-
-  load-town_th-m_th-sd_tiehouses_b-eth_b-ses_ticks "Bradford" 0.3 0.1  true  8  0 300
-  repeat 960 [ go ]
-  export-world (word "worlds/" town "_" threshold-mean "_" threshold-sd "_" tie-houses-to-ses "_" beta-eth "_" beta-ses "_t" ticks ".csv")
-
-  load-town_th-m_th-sd_tiehouses_b-eth_b-ses_ticks "Bradford" 0.3 0.1  true  8  8 300
-  repeat 960 [ go ]
-  export-world (word "worlds/" town "_" threshold-mean "_" threshold-sd "_" tie-houses-to-ses "_" beta-eth "_" beta-ses "_t" ticks ".csv")
-end
 @#$#@#$#@
 GRAPHICS-WINDOW
 517
@@ -1046,7 +937,7 @@ INPUTBOX
 1749
 70
 stop-tick
-2540.0
+1260.0
 1
 0
 Number
@@ -1546,7 +1437,7 @@ CHOOSER
 dissimilarity-ses
 dissimilarity-ses
 "all" "LOW" "MID" "HIGH"
-0
+3
 
 @#$#@#$#@
 ## WHAT IS IT?
