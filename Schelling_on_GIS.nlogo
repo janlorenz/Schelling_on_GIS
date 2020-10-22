@@ -315,15 +315,15 @@ to-report interaction [ethn-ind1 ethn-ind2]
                 totalpop) ] of dists
 end
 
-to-report moran-I-backup [dists]
+to-report moran-I [dists]
   let m mean [value-for-monitoring self] of dists
   report (count dists / (sum [count link-neighbors] of dists)) *
          ((sum [sum [(value-for-monitoring self - m) * (value-for-monitoring myself - m)] of link-neighbors] of dists) / sum [(value-for-monitoring self - m) ^ 2] of dists)
 end
-to-report moran-I [dists]
-  let m mean [value-for-monitoring self] of dists
-  report ((sum [sum [(1 / count link-neighbors) * (value-for-monitoring self - m) * (value-for-monitoring myself - m)] of link-neighbors] of dists) / sum [(value-for-monitoring self - m) ^ 2] of dists)
-end
+;to-report moran-I [dists]
+;  let m mean [value-for-monitoring self] of dists
+;  report ((sum [sum [(1 / count link-neighbors) * (value-for-monitoring self - m) * (value-for-monitoring myself - m)] of link-neighbors] of dists) / sum [(value-for-monitoring self - m) ^ 2] of dists)
+;end
 
 ;; GENERAL REPORTERS
 ; For computations on popdata-type lists of lists
@@ -1437,9 +1437,12 @@ CHOOSER
 dissimilarity-ses
 dissimilarity-ses
 "all" "LOW" "MID" "HIGH"
-3
+0
 
 @#$#@#$#@
+# THIS PART IS NOT IN FINAL FORM PLEASE IGNORE
+
+
 ## WHAT IS IT?
 
 (a general understanding of what the model is trying to show or explain)
