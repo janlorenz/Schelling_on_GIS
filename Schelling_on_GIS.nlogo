@@ -1449,7 +1449,7 @@ Besides the real-world geography, Schelling's model is extended to also include 
 This is document in the paper:
 
 **"Exploring the dynamics of neighborhood ethnic segregation with agent-based modelling: an empirical application to Bradford"**
-by Carolina V. ZUCCOTTI, Jan LORENZ, Alejandra RODRÍGUEZ SÁNCHEZ, Rocco PAOLILLO, and Selamawit SERKA (2021).
+by Carolina V. ZUCCOTTI, Jan LORENZ, Rocco PAOLILLO, Alejandra RODRÍGUEZ SÁNCHEZ, and Selamawit SERKA (2021).
 
 This model and, in particular, the **necessary shapefiles and demographic data** is provided here
 https://github.com/janlorenz/Schelling_on_GIS
