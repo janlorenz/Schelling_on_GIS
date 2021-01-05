@@ -22,7 +22,6 @@ to setup
   clear-all
   load-gisdataset
   let vars [ "WHTB_HG" "WHTB_MD" "WHTB_LW" "ASN_HGH" "ASIN_MD" "ASIN_LW" "BLCK_HG" "BLCK_MD" "BLCK_LW" "OTHR_HG" "OTHR_MD" "OTHR_LW" ]
-;  let vars [ "WHTB_HG" "WHTB_MD" "WHTB_LW" "ASN_HGH" "ASIN_MD" "ASIN_LW" "BLCK_HG" "BLCK_MD" "BLCK_LW" "OTHRTH_H" "OTHRTH_M" "OTHRTH_L" ]
   set ethnicities [ "WHITEB" "ASIAN" "BLACK" "OTHER" ]
   set sess [ "LOW" "MID" "HIGH" ]
   foreach gis:feature-list-of townshp [ x ->
@@ -76,15 +75,6 @@ to shuffle-population
   reset-ticks
 end
 
-to equalize-ses
-  ask districts [set popdata map [x -> map [y -> round (x * y)] normalize-list town-ses-counts ] ethnicity-counts]
-  ask districts [ setup-indivs-popdata-subcounts ]
-  set town-popdata matrix:to-row-list reduce matrix:plus [matrix:from-row-list popdata] of districts
-  set town-ethnicity-counts count-ethnicities town-popdata
-  set town-ses-counts count-sess town-popdata
-  set town-totalpop count-totalpop town-popdata
-end
-
 to setup-indivs-popdata-subcounts
   set ethnicity-counts count-ethnicities popdata
   set ses-counts count-sess popdata
@@ -93,6 +83,15 @@ to setup-indivs-popdata-subcounts
   set indivs reduce sentence map [z -> reduce sentence map [y -> n-values item y item z popdata [x -> (list z y random-beta-musigma threshold-mean threshold-sd)]] range length item z popdata] range length popdata
   set all-thresholds reduce sentence [map [x -> item 2 x] indivs] of districts
 end
+
+;to equalize-ses  ;; Maybe of use for future studies
+;  ask districts [set popdata map [x -> map [y -> round (x * y)] normalize-list town-ses-counts ] ethnicity-counts]
+;  ask districts [ setup-indivs-popdata-subcounts ]
+;  set town-popdata matrix:to-row-list reduce matrix:plus [matrix:from-row-list popdata] of districts
+;  set town-ethnicity-counts count-ethnicities town-popdata
+;  set town-ses-counts count-sess town-popdata
+;  set town-totalpop count-totalpop town-popdata
+;end
 
 ;; GO PROCEDURES
 
@@ -103,7 +102,7 @@ to go
   repeat town-totalpop [ ask one-of districts [
     let nummoves totalpop / (town-totalpop / count districts)
     repeat floor (nummoves) [individual-decides]
-    if random-float 1 < nummoves - floor (nummoves) [individual-decides]
+    if random-float 1 < (nummoves - floor (nummoves)) [individual-decides] ; to make the expected number of moves per tick equal to the number of individuals
   ]]
   visualize
   print (word
@@ -416,9 +415,9 @@ ticks
 BUTTON
 178
 36
-312
+335
 69
-Load town to Sim
+Load Town to Sim
 setup\n
 NIL
 1
@@ -693,7 +692,7 @@ CHOOSER
 ethnicity
 ethnicity
 "WHITEB" "ASIAN" "BLACK" "OTHER"
-1
+2
 
 CHOOSER
 425
@@ -703,7 +702,7 @@ CHOOSER
 ses
 ses
 "LOW" "MID" "HIGH"
-0
+2
 
 CHOOSER
 318
@@ -1440,41 +1439,45 @@ dissimilarity-ses
 0
 
 @#$#@#$#@
-# THIS PART IS NOT IN FINAL FORM PLEASE IGNORE
-
-
 ## WHAT IS IT?
 
-(a general understanding of what the model is trying to show or explain)
+A model of **residential segregation** inspired by **Schelling's model** implemented on real-world maps in GIS format. The model can be fed with real world demographic data. 
+Besides the real-world geography, Schelling's model is extended to also include the **socio-economic status** additional to **ethnicity** of residents. 
 
 ## HOW IT WORKS
 
-(what rules the agents use to create the overall behavior of the model)
+This is document in the paper:
+
+**"Exploring the dynamics of neighborhood ethnic segregation with agent-based modelling: an empirical application to Bradford"**
+by Carolina V. ZUCCOTTI, Jan LORENZ, Alejandra RODRÍGUEZ SÁNCHEZ, Rocco PAOLILLO, and Selamawit SERKA (2021).
+
+This model and, in particular, the **necessary shapefiles and demographic data** is provided here
+https://github.com/janlorenz/Schelling_on_GIS
+
+All notes below are just teasers to this full documentation. 
+Some modeling details are commented in the code. 
 
 ## HOW TO USE IT
 
-(how to use the model, including a description of each of the items in the Interface tab)
+Click "Load Town to Sim" to load regions as shape-files and demographic data of a town which must be provided in ESRI format in a subfolder using NetLogo's GIS extension.
 
-Clicking "Load town" in the interface section "1. Load Town from GIS Data" initializes a simulation by loading the LSOA shapes of a town (which are provided in ESRI format in a subfolder) using NetLogo's GIS extension.
+Explore the local demographic data by using the parameters provided and clicking "Update Maps and Plots".
 
-For the purpose of simulation speed all population counts can be scaled down by the factor `scale-down-pop`. 
- 
+Click "Shuffle Population" to create a counter-factual situation where every region's ethnic composition matches those of the whole town. 
+
+Click "Go" to run the simulation of relocation decisions of residents. 
 
 ## THINGS TO NOTICE
 
-(suggested things for the user to notice while running the model)
+See if and how ethnic segregation re-emerges from the artifically de-segregated situation. 
 
 ## THINGS TO TRY
 
-(suggested things for the user to try to do (move sliders, switches, etc.) with the model)
-
-## EXTENDING THE MODEL
-
-(suggested things to add or change in the Code tab to make the model more complicated, detailed, accurate, etc.)
+On outline of successive simulation experiments are documented in the paper cited above.
 
 ## NETLOGO FEATURES
 
-(interesting or unusual features of NetLogo that the model uses, particularly in the Code tab; or where workarounds were needed for missing features)
+This is a short more technical outline highlighting how NetLogo's features are used.
 
 For each LSOA an agent of the breed `district` is created located at the center of the LSOA. Further on, links are created between districts representing shapes which share a border.
 
@@ -1502,21 +1505,16 @@ Further on, in each district a list of lists is created where each sublist repre
 
 Finally, for each district we set maximal numbers of individuals for each SES group. These numbers are set such that a is a fraction of `free-space` of these maximal number are not occupied initially. Thus, we assume that in each district there are certain fractions of houses, flats, or rooms suitable and affordable for each of the three SES groups. With `free-space` = 0.05, 5% of these places are initially free. 
 
-Compared to a typical model in NetLogo our implementation does not represent each individual as an agent but as an item in a list stored by a district (which is an agent in our implementation). 
+Compared to a typical model in NetLogo our implementation does not represent each individual as an agent but as an item in a list stored by a district (which is a turtle in this implementation). 
 
-The selection of an individual is modeled  by first selecting a district at random and second on of the individuals from the list of list stored in that district. From the selected sublist we know the ethnicity, the SES and the threshold of the individual. LSOAs differ in size. Therefore, we adjusted for that by selecting and individual from districts with below average population only with a certain probability. In the case of an above average district, we do more than one individual decision with probabilities such that the expected number of decisions fits to the the relative size of the district.
+The selection of an individual is modeled by first selecting a district at random and second one of the individuals from the list of lists stored in that district. From the selected sublist we know the ethnicity, the SES and the threshold of the individual. LSOAs differ in size. Therefore, we adjusted for that by selecting and individual from districts with below average population only with a certain probability. In the case of an above average district, we do more than one individual decision with probabilities such that the expected number of decisions fits to the the relative size of the district.
 
-Once an individual is selected the process is as follows: First, the individual may be forced to move with a (small) probability of `turnover` (e.g. 0.003). In this case, the individual selects another place to move. This place is randomly selected from all available places suitable for the SES of the individual in the whole town.^[To that end, we compute for each district the difference between the population count and the maximal population for the respective SES group. Then we select one district with probabilities proportional to that number, a procedure sometimes called roulette wheel selection.] When the individual is not forced to move, the individual assesses their utility with the current residence using the equation above. This includes the computation of the fractions of population with the same ethnicity and the same SES in the neighborhood and the draw of a random number from a standard Gumbel distribution. The parameter `neighbor-weight` weights the population of all neighboring districts for the counts used to compute the fractions in the neighborhood (e.g. 0.17). When the utility obtained from the current residence is negative, the individual starts to search. In the model that means, the individual selects a potential new place with the same procedure. Naturally, this place lies most likely in another district. The individual then assesses the utility for the new place in the same way as it assessesed the utility for the current residence (but with a new independent random draw from a Gumbel distribution). Finally, the individual moves to the new place when the utility from the new place is higher than the utility form the current place. Technically, then the counts in the old and new districts are updated and the sublist for the list of individuals is removed in the old district and appended to the list in the new district. In that way, the individual carries also their the individual threshold to the new district. 
+Once an individual is selected the process is as follows: First, the individual may be forced to move with a (small) probability of `turnover` (e.g. 0.003 or switched off when 0). In this case, the individual selects another place to move. This place is randomly selected from all available places suitable for the SES of the individual in the whole town. To that end, we compute for each district the difference between the population count and the maximal population for the respective SES group. Then we select one district with probabilities proportional to that number, a procedure sometimes called roulette wheel selection. When the individual is not forced to move, the individual assesses their utility with the current residence based on the parameters `beta-eth` and `beta-ses`. This includes the computation of the fractions of population with the same ethnicity and the same SES in the neighborhood and the draw of a random number from a standard Gumbel distribution. The parameter `neighbor-weight` weights the population of all neighboring districts for the counts used to compute the fractions in the neighborhood (e.g. 0.17). When the utility obtained from the current residence is negative, the individual starts to search. In the model that means, the individual selects a potential new place with the same procedure but weights for the roulette wheel selection being adjusted by a `recommendation-probability` when `ethn-ses-recommendations` is switched on. Naturally, this place lies most likely in another district. The individual then assesses the utility for the new place in the same way as it assessesed the utility for the current residence (but with a new independent random draw from a Gumbel distribution). Finally, the individual moves to the new place when the utility from the new place is higher than the utility form the current place. Technically, then the counts in the old and new districts are updated and the sublist for the list of individuals is removed in the old district and appended to the list in the new district. In that way, the individual carries also their the individual threshold to the new district. 
 
-
-
-## RELATED MODELS
-
-(models in the NetLogo Models Library and elsewhere which are of related interest)
 
 ## CREDITS AND REFERENCES
 
-(a reference to the model's URL on the web if it has one, as well as any other necessary credits, citations, and links)
+Programmed by Jan Lorenz with the help of Rocco Paolillo and advice from all authors. 
 @#$#@#$#@
 default
 true
@@ -1823,7 +1821,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.1.1
+NetLogo 6.2.0
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
