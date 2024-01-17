@@ -11,3 +11,8 @@ The directory `Data_ZuccLoreRodrPaolSerk2020/` includes exports of full simulati
 by Carolina V. ZUCCOTTI, Jan LORENZ, Rocco PAOLILLO, Alejandra RODRÍGUEZ SÁNCHEZ, and Selamawit SERKA (2021). 
 
 Any of the csv-files in `Data_ZuccLoreRodrPaolSerk2020/` can be loaded in the Model by clicking the "Import World" button in the model's interface. Then the output can be further investigated via various visualization but also run further, or rerun by shuffling the population before.
+
+# Model Interface
+
+![image](https://github.com/janlorenz/Schelling_on_GIS/assets/7503499/434b5943-ed7f-4470-895f-95727b8a74fe)
+
